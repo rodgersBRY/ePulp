@@ -10,19 +10,18 @@ function throwError(errorText, statusCode) {
 }
 
 exports.register = async (req, res, next) => {
-  const { first, last, phone, password } = req.body;
+  const { fullName, phoneNumber, password } = req.body;
 
   try {
-    const user = await User.findOne({ phone: phone });
+    const user = await User.findOne({ phoneNumber: phoneNumber });
 
     if (user) throwError("User already registered", 409);
 
     const hashedPass = await bcrypt.hash(password, 12);
 
     const newUser = new User({
-      firstName: first,
-      lastName: last,
-      phoneNumber: phone,
+      fullName:fullName,
+      phoneNumber: phoneNumber,
       password: hashedPass,
     });
 

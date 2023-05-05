@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const farmerSchema = new Schema({
-  firstName: {
+  membershipNo: {
     type: String,
     required: true,
   },
-  lastName: {
+  fullName: {
     type: String,
     required: true,
   },
@@ -21,7 +21,6 @@ const farmerSchema = new Schema({
   },
   totalAmount: {
     type: Number,
-    required: true,
     default: 0,
   },
   coffeeBatches: [

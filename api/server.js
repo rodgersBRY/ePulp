@@ -2,7 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
 const app = express();
+
+const authRoutes = require("./routes/auth.routes");
+const adminRoutes = require("./routes/admin.routes");
 
 require("dotenv").config();
 
@@ -13,6 +17,9 @@ mongoose.connect(process.env.MONGOURI).then(() => {
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/auth", authRoutes);
+app.use("/admin", adminRoutes);
 
 // error handling middleware
 app.use((error, req, res, next) => {
