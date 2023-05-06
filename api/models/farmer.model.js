@@ -19,7 +19,7 @@ const farmerSchema = new Schema({
     type: String,
     required: true,
   },
-  totalAmount: {
+  totalWeight: {
     type: Number,
     default: 0,
   },
