@@ -3,11 +3,13 @@
         <main>
             <section class="form">
                 <form @submit.prevent="loginUser" method="post">
-                    <label for="phone">Phone number: </label>
+                    <h2 class="text-center">LOGIN</h2>
+                    <br><br>
+                    <label for="phone">Phone number </label>
                     <input type="tel" v-model="phone" placeholder="07XXXXXX98">
-                    <label for="password">Password: </label>
+                    <label for="password">Password </label>
                     <input type="password" v-model="password">
-                    <button type="submit" value="Login">Login</button>
+                    <v-btn depressed block color="brown" dark type="submit" value="Login" class="mt-10">Login</v-btn>
                 </form>
             </section>
         </main>
@@ -32,13 +34,36 @@ export default {
     methods: {
 
         loginUser() {
-            var userData = {
-                phone: this.phone,
-                password: this.password,
-            }
+            var userForm = new FormData()
 
-            this.$store.dispatch("login", userData)
+            userForm.append("phone", this.phone)
+            userForm.append("password", this.password)
+
+            this.$store.dispatch("login", userForm)
         }
     }
 }
 </script>
+
+<style scoped lang="scss">
+#login-page {
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    main {
+        background-color: var(--accent-color);
+        width: 40%;
+        padding: 4rem 7rem;
+        input {
+            display: block;
+            background-color: white;
+            padding: 10px;
+            width: 100%;
+            margin: 5px 0 16px 0;
+        }
+
+    } 
+}
+
+</style>
