@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const logger = require("morgan");
 
 const app = express();
 
@@ -11,9 +12,10 @@ const adminRoutes = require("./routes/admin.routes");
 require("dotenv").config();
 
 mongoose.connect(process.env.MONGOURI).then(() => {
-  console.log("Connected to mongo DB successfully!");
+  console.log("Connected to mongo DB!");
 });
 
+app.use(logger('dev'));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

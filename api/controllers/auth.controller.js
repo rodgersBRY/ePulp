@@ -10,18 +10,18 @@ function throwError(errorText, statusCode) {
 }
 
 exports.register = async (req, res, next) => {
-  const { fullName, phoneNumber, password } = req.body;
+  const { name, phone, password } = req.body;
 
   try {
-    const user = await User.findOne({ phoneNumber: phoneNumber });
+    const user = await User.findOne({ phoneNumber: phone });
 
     if (user) throwError("User already registered", 409);
 
     const hashedPass = await bcrypt.hash(password, 12);
 
     const newUser = new User({
-      fullName:fullName,
-      phoneNumber: phoneNumber,
+      fullName: name,
+      phoneNumber: phone,
       password: hashedPass,
     });
 
@@ -39,7 +39,7 @@ exports.login = async (req, res, next) => {
   let loadedUser;
 
   try {
-    const user = await User.findOne({ phone: phone });
+    const user = await User.findOne({ phoneNumber: phone });
 
     if (!user) throwError("User is not registered", 404);
 
