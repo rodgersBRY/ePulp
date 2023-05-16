@@ -3,7 +3,7 @@
     <v-card flat width="60%" class="mx-auto mt-11">
 			<div class="user-ops d-flex justify-space-between">
 				<input type="text" name="search" id="search" v-model="searchQuery" placeholder="Search..." />
-				<v-btn outlined text color="brown darken-3"><v-icon>mdi-plus</v-icon>Add New Farmer</v-btn>
+				<v-btn outlined text color="brown"><v-icon>mdi-plus</v-icon>Add New Farmer</v-btn>
 			</div>
    
 			<table>
