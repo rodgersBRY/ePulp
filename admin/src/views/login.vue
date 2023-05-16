@@ -5,9 +5,9 @@
                 <form @submit.prevent="loginUser" method="post">
                     <h2 class="text-center">LOGIN</h2>
                     <br><br>
-                    <label for="phone">Phone number </label>
+                    <label for="phone">Phone Number</label>
                     <input type="tel" v-model="phone" placeholder="07XXXXXX98">
-                    <label for="password">Password </label>
+                    <label for="password">Password</label>
                     <input type="password" v-model="password">
                     <v-btn depressed block color="brown" dark type="submit" value="Login" class="mt-10">Login</v-btn>
                 </form>

@@ -4,13 +4,13 @@
             <form @submit.prevent="registerUser" method="post">
                 <h2 class="text-center">Sign Up</h2>
                 <br>
-                <label for="name">Fullname: </label>
-                <input type="text" name="name" v-model="name">
-                <label for="phone">Phone Number: </label>
-                <input type="tel" name="phone" v-model="phone">
-                <label for="password">Password: </label>
+                <label for="name">Full Name</label>
+                <input type="text" name="name" placeholder="e.g. Jane Doe" v-model="name">
+                <label for="phone">Phone Number</label>
+                <input type="tel" name="phone" placeholder="07XXXXXX89" v-model="phone">
+                <label for="password">Password</label>
                 <input type="password" name="password" v-model="password">
-                <label for="confirmPass">Re-enter Password: </label>
+                <label for="confirmPass">Re-enter Password</label>
                 <input type="password" name="confirmPass" v-model="confirmPass" :class="!passMatch ? 'error': ''">
 
                 <v-btn type="submit" value="register" dark color="brown" block>Sign Up</v-btn>

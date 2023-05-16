@@ -42,7 +42,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 :root {
   --primary-color: rgb(85, 13, 13);
   --accent-color: rgb(160, 105, 105);
@@ -52,7 +52,25 @@ input:focus {
   outline: none;
 }
 
-.v-app-bar {
-  background: var(--primary-color);
+.v-toolbar__content {
+  background-color: var(--primary-color);
+  padding: 0;
+
+  li {
+    list-style: none;
+    margin: 0 2rem;
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    
+    &:hover,&.active {
+      color: var(--accent-color);
+      cursor: pointer;
+      border-top: 3px solid var(--accent-color);
+    }
+  }
+  
+  
 }
 </style>
