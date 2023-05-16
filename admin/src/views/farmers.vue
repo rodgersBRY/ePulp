@@ -17,7 +17,7 @@
 				</thead>
 
 				<tbody>
-					<tr v-for="item in paginatedData" :key="item.membershipNo">
+					<tr v-for="item in paginatedData" :key="item.membershipNo" @click="$router.push(`/farmers/${item.membershipNo}`)">
 						<td>{{ item.membershipNo }}</td>
 						<td>{{ item.fullName }}</td>
 						<td>{{ item.phoneNumber }}</td>
@@ -98,6 +98,11 @@ export default {
 
 #farmers {
     padding: 2rem 0;
+		table {
+			tbody tr {
+				cursor: pointer;
+			}
+		}
 }
 input {
     background-color: rgb(238, 238, 238);

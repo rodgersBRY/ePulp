@@ -21,10 +21,15 @@ const routes = [
     component: () => import("../views/register.vue"),
   },
   {
+    path: '/farmers/:farmerId',
+    name: "Farmer Details",
+    component: () => import("../views/farmer_details.vue"),
+  },
+  {
     path: '/farmers',
     name: "Farmers",
     component: () => import("../views/farmers.vue"),
-  }
+  } 
 ];
 
 const router = new VueRouter({
