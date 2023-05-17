@@ -17,6 +17,16 @@ export default {
         state.error = null;
       },
     },
+
+    actions: {
+      setError({commit}, payload) {
+        commit('setError', payload);
+      },
+
+      clearError({commit}) {
+        commit('clearError')
+      }
+    },
     
     getters: {
       isLoading: (state) => state.loading,

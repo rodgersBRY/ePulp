@@ -1,72 +1,115 @@
 <template>
 <div id="farmers">
-    <v-card flat width="60%" class="mx-auto mt-11">
-			<div class="user-ops d-flex justify-space-between">
-				<input type="text" name="search" id="search" v-model="searchQuery" placeholder="Search..." />
-				<v-btn outlined text color="brown"><v-icon>mdi-plus</v-icon>Add New Farmer</v-btn>
+	<v-card flat width="60%" class="mx-auto mt-11">
+		<div class="user-ops d-flex justify-space-between">
+			<input type="text" name="search" id="search" v-model="searchQuery" placeholder="Search..." />
+			<v-btn outlined text color="brown" :disabled="dialog" @click="dialog=true"><v-icon>mdi-plus</v-icon>New Farmer</v-btn>
+		</div>
+		<div class="new-farmer-form" v-show="dialog">
+			<form @submit.prevent="addNewFarmer">
+				<v-text-field dense outlined label="Full Name" type="text" color="brown" v-model="name"></v-text-field>
+				<v-text-field dense outlined label="Phone Number" type="tel" color="brown" v-model="phone"></v-text-field>
+				<v-text-field dense outlined label="Password" type="password" color="brown" v-model="password"></v-text-field>
+				<div class="pa-3">
+					<v-row no-gutters>
+						<v-spacer></v-spacer>
+						<v-btn text @click="closeDialog" color="red">Cancel</v-btn>
+						<v-btn type="submit" depressed color="green" dark class="ml-2" :loading="isLoading">Save</v-btn>	
+					</v-row>		
+				</div>
+
+				<v-dialog v-model="errorDialog" width="350px">
+					<v-card class="text-center pa-4">
+						<v-icon size="100" color="red">mdi-alert-circle-outline</v-icon>
+						<v-card-text class="mt-3">All fields must be filled <br> before submitting</v-card-text>
+						<v-card-actions>
+							<v-spacer></v-spacer>
+							<v-btn text block @click="errorDialog = false">close</v-btn>
+						</v-card-actions>
+					</v-card>
+				</v-dialog>
+			</form>
+		</div>
+		<v-progress-linear
+		v-if="isLoading"
+		indeterminate
+		color="brown darken-2"
+		></v-progress-linear>
+
+		<table v-else>
+			<thead>
+				<tr>
+					<th>Membership No</th>
+					<th>Full Name</th>
+					<th>Phone Number</th>
+					<th>Total Weight (Kgs)</th>
+				</tr>
+			</thead>
+			<div v-if="paginatedData.length === 0">
+				<p class="grey--text">No farmers on the system</p>
 			</div>
-   
-			<table>
-				<thead>
-					<tr>
-						<th>Membership No</th>
-						<th>Full Name</th>
-						<th>Phone Number</th>
-						<th>Total Weight (Kgs)</th>
-					</tr>
-				</thead>
+			<tbody v-else>				
+				<tr  v-for="item in paginatedData" :key="item.membershipNo" @click="$router.push(`/farmers/${item._id}`)">
+					<td>{{ item.membershipNo }}</td>
+					<td>{{ item.fullName }}</td>
+					<td>{{ item.phoneNumber }}</td>
+					<td>{{ item.totalWeight }}</td>
+				</tr>
+			</tbody>
+		</table>
 
-				<tbody>
-					<tr v-for="item in paginatedData" :key="item.membershipNo" @click="$router.push(`/farmers/${item.membershipNo}`)">
-						<td>{{ item.membershipNo }}</td>
-						<td>{{ item.fullName }}</td>
-						<td>{{ item.phoneNumber }}</td>
-						<td>{{ item.totalWeight }}</td>
-					</tr>
-				</tbody>
-			</table>
+		<div class="pagination">
+			<v-btn icon outlined @click="previousPage" :disabled="currentPage === 1">
+				<v-icon>mdi-arrow-left</v-icon>
+			</v-btn>
 
-			<div class="pagination">
-				<v-btn icon outlined @click="previousPage" :disabled="currentPage === 1">
-					<v-icon>mdi-arrow-left</v-icon>
-				</v-btn>
+			<span class='mx-4'>{{ currentPage }}</span>
 
-				<span class='mx-4'>{{ currentPage }}</span>
-
-				<v-btn icon outlined @click="nextPage" :disabled="currentPage === totalPages">
-					<v-icon>mdi-arrow-right</v-icon>
-				</v-btn>
-			</div>
-    </v-card>
+			<v-btn icon outlined @click="nextPage" :disabled="currentPage === totalPages">
+				<v-icon>mdi-arrow-right</v-icon>
+			</v-btn>
+		</div>
+	</v-card>
 </div>
 </template>
 
 <script>
-import Farmers from './farmers.json'
+import { mapGetters } from 'vuex'
 
 export default {
 	name: 'Farmers',
 
 	data() {
 		return {
-			tableData: Farmers,
 			currentPage: 1,
 			itemsPerPage: 10,
 			searchQuery: '',
+			dialog: false,
+			errorDialog: false,
+
+			name: '',
+			phone: '',
+			password: '',
 		}
 	},
 
+	created() {
+		this.$store.dispatch("fetchFarmers")
+	},
+
 	computed: {
+		...mapGetters(['farmers','isLoading']),
+
 		totalPages() {
-				return Math.ceil(this.tableData.length / this.itemsPerPage);
+				return Math.ceil(this.farmers.length / this.itemsPerPage);
 		},
 		
 		filteredData() {
-				if(this.searchQuery == '') return this.tableData
+				if(this.searchQuery == '') return this.farmers
 
 				const query = this.searchQuery.toLowerCase()
 
-				return this.tableData.filter(item => {
+				return this.farmers.filter(item => {
 				return Object.values(item).some(value => String(value).toLowerCase().includes(query))
 				})
 		},
@@ -79,6 +122,30 @@ export default {
 	},
 
 	methods: {
+		closeDialog() {
+			this.dialog = false
+			this.name = '',
+			this.phone = '',
+			this.password = ''
+		},
+
+		async addNewFarmer() {
+			if(this.name != '' || this.phone != '' || this.password != '') {
+				const farmer = {
+					fullName: this.name,
+					phoneNumber: this.phone,
+					password: this.password
+				}
+
+				await this.$store.dispatch('newFarmer', farmer)
+				this.$store.dispatch("fetchFarmers")
+				this.closeDialog()
+			} else {
+				this.errorDialog = true;
+			}
+			
+		},
+
 		previousPage() {
 				if (this.currentPage > 1) {
 				this.currentPage--;
@@ -104,6 +171,7 @@ export default {
 			}
 		}
 }
+
 input {
     background-color: rgb(238, 238, 238);
     padding: 10px;
@@ -112,9 +180,8 @@ input {
     margin-bottom: 1rem;
 }
 
-.table-container {
-    max-width: 600px;
-    margin: 0 auto;
+.new-farmer-form {
+	transition: display 10s ease-in-out;
 }
 
 table {
