@@ -9,6 +9,14 @@ function throwError(errorText, statusCode) {
   throw error;
 }
 
+function generateRandomNumberWithPrefix() {
+  const prefix = "FM-";
+  const randomNumber = Math.floor(Math.random() * 10000); // Generate a random 6-digit number
+  const formattedNumber = randomNumber.toString().padStart(4, "0"); // Pad the number with leading zeros if necessary
+  const result = prefix + formattedNumber;
+  return result;
+}
+
 exports.allFarmers = async (req, res, next) => {
   try {
     const farmers = await Farmer.find();
@@ -18,6 +26,21 @@ exports.allFarmers = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getFarmer = async (req, res, next) => {
+  const farmerId = req.params.farmerId;
+  console.log(farmerId);
+  try {
+    const farmer = await Farmer.findById(farmerId);
+
+    if (!farmer) throwError("Farmer id not found!", 404);
+
+    return res.status(200).json(farmer);
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 exports.addFarmer = async (req, res, next) => {
   const { fullName, phoneNumber, password } = req.body;
@@ -29,7 +52,9 @@ exports.addFarmer = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    var membershipNo = generateMembershipNumber();
+    var membershipNo = generateRandomNumberWithPrefix();
+
+    console.log(membershipNo);
 
     const farmer = new Farmer({
       fullName: fullName,
@@ -92,16 +117,19 @@ exports.addFarmerCoffeeWeight = async (req, res, next) => {
 
     const coffeeBatchesList = [...farmer.coffeeBatches];
 
-    coffeeBatchesList.push({ coffeeWeight: weight, dateOfDelivery: Date.now() });
+    coffeeBatchesList.push({
+      coffeeWeight: weight,
+      dateOfDelivery: Date.now(),
+    });
 
     farmer.coffeeBatches = coffeeBatchesList;
-    farmer.totalWeight += weight;
+    farmer.totalWeight += parseInt(weight);
 
     const result = await farmer.save();
 
     return res
       .status(201)
-      .json({ message: "weight has been recorded", result: result });
+      .json({ message: "weight has been recorded", result });
   } catch (err) {
     next(err);
   }

@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const farmerSchema = new Schema({
   membershipNo: {
     type: String,
+    unique: true,
     required: true,
   },
   fullName: {

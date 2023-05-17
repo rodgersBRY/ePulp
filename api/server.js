@@ -11,7 +11,7 @@ const adminRoutes = require("./routes/admin.routes");
 
 require("dotenv").config();
 
-mongoose.connect(process.env.MONGOURI).then(() => {
+mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log("Connected to mongo DB!");
 });
 
@@ -20,8 +20,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/auth", authRoutes);
-app.use("/admin", adminRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 
 // error handling middleware
 app.use((error, req, res, next) => {
