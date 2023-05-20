@@ -2,13 +2,14 @@
   <div id="farmer-details">
     <main class="farmer">
       <section class="main-section">
-        <v-card width="60%" class="py-4 px-8 mx-auto" color="grey lighten-4" flat>
+        <v-card width="65%" class="py-4 px-8 mx-auto" color="grey lighten-4" flat>
           <v-row justify="space-between">
-            <v-icon size="150">mdi-account</v-icon>
+            <v-icon size="190">mdi-badge-account</v-icon>
             <div class="user-details">
-              <v-card-title class="mb-3"><v-icon class="mr-2">mdi-badge-account</v-icon>{{ farmer.fullName }}</v-card-title>
-              <v-card-subtitle><v-icon class="mr-2">mdi-phone</v-icon> {{ farmer.phoneNumber }}</v-card-subtitle>
-              <v-card-text>Total weight: {{ farmer.totalWeight }} Kgs</v-card-text>
+              <v-card-title class="mb-3"><span>Name:</span> {{ farmer.fullName }}</v-card-title>
+              <v-card-text><span style="font-weight: bold">Telephone:</span> {{ farmer.phoneNumber }}</v-card-text>
+              <v-card-text><span style="font-weight: bold">A/C No:</span> {{ farmer.accountNo }}</v-card-text>
+              <v-card-text><span style="font-weight: bold">Total weight:</span> {{ farmer.totalWeight }} Kgs</v-card-text>
             </div>
           </v-row>
         </v-card>

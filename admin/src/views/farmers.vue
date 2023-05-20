@@ -56,8 +56,10 @@
 				<v-icon>mdi-arrow-left</v-icon>
 			</v-btn>
 
-			<span class='mx-4'>{{ currentPage }}</span>
-
+			<span v-for="pageNumber in displayedPages" :key="pageNumber">
+        <button @click="changePage(pageNumber)" :class="{ active: pageNumber === currentPage }">{{ pageNumber }}</button>
+      </span>
+			
 			<v-btn icon outlined @click="nextPage" :disabled="currentPage === totalPages">
 				<v-icon>mdi-arrow-right</v-icon>
 			</v-btn>
@@ -112,6 +114,26 @@ export default {
 				const endIndex = startIndex + this.itemsPerPage;
 				return this.filteredData.slice(startIndex, endIndex);
 		},
+
+		displayedPages() {
+			const range = 2; // Number of page numbers to display before and after the current page
+			const currentPage = this.currentPage;
+			const totalPages = this.totalPages;
+
+			let startPage = Math.max(currentPage - range, 1);
+			let endPage = Math.min(currentPage + range, totalPages);
+
+			// Adjust the start and end pages if they go beyond the available range
+			if (totalPages > range * 2 + 1) {
+				if (currentPage <= range) {
+					endPage = range * 2 + 1;
+				} else if (currentPage >= totalPages - range) {
+					startPage = totalPages - range * 2;
+				}
+			}
+
+			return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+		},
 	},
 
 	methods: {
@@ -148,14 +170,18 @@ export default {
 		},
 
 		previousPage() {
-				if (this.currentPage > 1) {
+			if (this.currentPage > 1) {
 				this.currentPage--;
-				}
+			}
+		},
+
+		changePage(pageNumber) {
+			this.currentPage = pageNumber;
 		},
 
 		nextPage() {
 			if (this.currentPage < this.totalPages) {
-			this.currentPage++;
+				this.currentPage++;
 			}
 		},
 	},
@@ -222,6 +248,10 @@ tr:hover {
 
 .pagination button:hover {
     background-color: #f2f2f2;
+}
+
+.pagination button.active {
+  background-color: #ccc;
 }
 
 .pagination button:disabled {
