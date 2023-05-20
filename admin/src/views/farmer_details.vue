@@ -15,22 +15,7 @@
 
         <v-row class="my-10" no-gutters>
           <v-spacer />
-          <v-btn text color="green" @click="newBatchDialog = true"><v-icon>mdi-plus</v-icon> New Batch</v-btn>
-          
-          <!-- update new delivery dialog -->
-          <v-dialog width="400px" v-model="newBatchDialog">
-            <v-card class="pa-5">
-              <v-card-title>
-                Enter the coffee quantity
-              </v-card-title> 
-              <v-text-field outlined label="Weight" color="brown" v-model="weight"></v-text-field>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn depressed outlined text color="red" @click="newBatchDialog=false">Cancel</v-btn>
-                <v-btn depressed outlined text color="green" @click="addNewCoffeeDelivery" :loading="isLoading">Add</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+          <v-btn text color="green" :disabled="newBatchDialog" @click="newBatchDialog = true"><v-icon>mdi-plus</v-icon> New Batch</v-btn>
 
           <!-- success dialog -->
           <v-dialog width="400px" v-model="successDialog">
@@ -44,8 +29,23 @@
             </v-card>
           </v-dialog>
 
-          <error-dialog :display="errorDialog" error-text="Enter weight before submitting" @close-dialog="errorDialog = false"></error-dialog>
+          <error-dialog :display="error" :error-text="error" @close-dialog="resetError"></error-dialog>
         </v-row>
+
+        <!-- update new delivery form -->
+        <div class="pa-5">
+          <form @submit.prevent="addNewCoffeeDelivery" v-show="newBatchDialog">
+              <v-card-title>
+                Enter the coffee quantity
+              </v-card-title> 
+              <v-text-field autofocus outlined label="Weight" color="brown" v-model="weight"></v-text-field>
+              <v-card-actions>
+                <v-spacer />
+                <v-btn depressed outlined text color="red" @click="newBatchDialog = false">Cancel</v-btn>
+                <v-btn depressed outlined text color="green" type="submit" :loading="isLoading">Add</v-btn>
+              </v-card-actions>
+          </form>
+        </div>
 
         <div class="deliveries">
           <v-card class="py-4 px-2">
@@ -56,6 +56,7 @@
             indeterminate
             color="brown darken-2"
             ></v-progress-linear>
+
             <table v-else>
               <thead>
                 <tr>
@@ -94,25 +95,19 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import errorDialog from '@/components/error_component.vue'
 
 export default({
   name: "farmer-details",
-
-  components: {
-    'error-dialog': errorDialog
-  },
 
   data() {
     return {
       farmerId:  this.$route.params.farmerId,
 			currentPage: 1,
 			itemsPerPage: 5,
-      dialog: false,
-      weight: null,
+      
+      weight: '',
       newBatchDialog: false,
       successDialog: false,
-      errorDialog: false,
     }
   },
 
@@ -135,7 +130,7 @@ export default({
   },
 
   computed: {
-    ...mapGetters(['farmers', 'farmer','isLoading']),
+    ...mapGetters(['farmers', 'farmer', 'isLoading', 'error']),
 
     farmerData() {
       return this.farmer.coffeeBatches
@@ -153,18 +148,19 @@ export default({
   },
 
   methods: {
-    ...mapActions(['updateFarmersQuantity']),
+    ...mapActions(['updateFarmersQuantity', 'setError', 'clearError']),
 
     async addNewCoffeeDelivery() {
-      if(this.weight === '') {
-        this.newBatchDialog = false
-        this.errorDialog = true
-      } else {
+      if(this.weight != '') {
         await this.updateFarmersQuantity({id: this.farmerId, weight: this.weight})
-        this.$store.dispatch('fetchFarmer', this.farmerId)
+        
         this.weight = ''
         this.newBatchDialog = false
+
         this.successDialog = true
+        this.$store.dispatch('fetchFarmer', this.farmerId)
+      } else {
+        this.setError('Cannot submit an empty field')
       }
     },
 
@@ -176,6 +172,10 @@ export default({
 		nextPage() {
 			if (this.currentPage < this.totalPages) this.currentPage++;
 		},
+
+    resetError() {
+      this.clearError()
+    }
 	},
 })
 </script>

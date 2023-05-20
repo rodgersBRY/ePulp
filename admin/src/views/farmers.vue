@@ -7,7 +7,8 @@
 		</div>
 		<div class="new-farmer-form" v-show="dialog">
 			<form @submit.prevent="addNewFarmer">
-				<v-text-field dense outlined label="Full Name" type="text" color="brown" v-model="name"></v-text-field>
+				<v-text-field autofocus dense outlined label="Full Name" type="text" color="brown" v-model="name"></v-text-field>
+				<v-text-field dense outlined label="Account Number" type="number" color="brown" v-model="accountNo"></v-text-field>
 				<v-text-field dense outlined label="Phone Number" type="tel" color="brown" v-model="phone"></v-text-field>
 				<v-text-field dense outlined label="Password" type="password" color="brown" v-model="password"></v-text-field>
 				<div class="pa-3">
@@ -18,17 +19,8 @@
 					</v-row>		
 				</div>
 
-				<error-dialog :display="errorDialog" error-text="All fields must be filled <br> before submitting" @close-dialog="errorDialog = false"></error-dialog>
-				<!-- <v-dialog v-model="errorDialog" width="350px">
-					<v-card class="text-center pa-4">
-						<v-icon size="100" color="red">mdi-alert-circle-outline</v-icon>
-						<v-card-text class="mt-3">All fields must be filled <br> before submitting</v-card-text>
-						<v-card-actions>
-							<v-spacer></v-spacer>
-							<v-btn text block @click="errorDialog = false">close</v-btn>
-						</v-card-actions>
-					</v-card>
-				</v-dialog> -->
+				<error-dialog :display="error" :error-text="error" @close-dialog="resetError"></error-dialog>
+				
 			</form>
 		</div>
 		<v-progress-linear
@@ -75,16 +67,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import errorText from '@/components/error_component.vue'
-
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
 	name: 'Farmers',
-
-	components: {
-		"error-dialog": errorText
-	},
 
 	data() {
 		return {
@@ -92,11 +78,11 @@ export default {
 			itemsPerPage: 10,
 			searchQuery: '',
 			dialog: false,
-			errorDialog: false,
 
 			name: '',
 			phone: '',
 			password: '',
+			accountNo: '',
 		}
 	},
 
@@ -105,7 +91,7 @@ export default {
 	},
 
 	computed: {
-		...mapGetters(['farmers','isLoading']),
+		...mapGetters(['farmers','isLoading', 'error']),
 
 		totalPages() {
 				return Math.ceil(this.farmers.length / this.itemsPerPage);
@@ -129,18 +115,26 @@ export default {
 	},
 
 	methods: {
+		...mapActions(['clearError', 'setError']),
+
 		closeDialog() {
 			this.dialog = false
 			this.name = '',
 			this.phone = '',
-			this.password = ''
+			this.password = '',
+			this.accountNo=''
+		},
+
+		resetError() {
+			this.clearError()
 		},
 
 		async addNewFarmer() {
-			if(this.name != '' || this.phone != '' || this.password != '') {
+			if(this.name != '' || this.phone != '' || this.password != '' || this.accountNo != '') {
 				const farmer = {
 					fullName: this.name,
 					phoneNumber: this.phone,
+					accountNo: this.accountNo,
 					password: this.password
 				}
 
@@ -148,7 +142,7 @@ export default {
 				this.$store.dispatch("fetchFarmers")
 				this.closeDialog()
 			} else {
-				this.errorDialog = true;
+				this.setError("All fields should be <br/> filled before submitting")
 			}
 			
 		},

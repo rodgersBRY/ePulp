@@ -13,20 +13,14 @@
 
 <script>
 export default {
-    name: 'error',
+	name: 'error',
 
-    props: {
-        display: {
-            type: Boolean,
-            default: false,
-        },
-        errorText: String
-    },
-
-    // data() {
-    //     return {
-    //         showDialog: false
-    //     }
-    // }
+	props: {
+		display: {
+			type: Boolean,
+			default: false,
+		},
+		errorText: String
+	}
 }
 </script>
