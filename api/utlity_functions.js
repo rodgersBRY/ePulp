@@ -1,11 +1,9 @@
-let currentNumber = 1;
-
-function generateMembershipNumber() {
-  const membershipNumber = `M${currentNumber.toString().padStart(4, "0")}`;
-  currentNumber++;
-  return membershipNumber;
+function generateRandomNumberWithPrefix() {
+  const prefix = "FM-";
+  const randomNumber = Math.floor(Math.random() * 10000); // Generate a random 6-digit number
+  const formattedNumber = randomNumber.toString().padStart(4, "0"); // Pad the number with leading zeros if necessary
+  const result = prefix + formattedNumber;
+  return result;
 }
 
-module.exports = {
-  generateMembershipNumber,
-};
+module.exports = { generateRandomNumberWithPrefix };
