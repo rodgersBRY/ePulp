@@ -18,7 +18,8 @@
 					</v-row>		
 				</div>
 
-				<v-dialog v-model="errorDialog" width="350px">
+				<error-dialog :display="errorDialog" error-text="All fields must be filled <br> before submitting" @close-dialog="errorDialog = false"></error-dialog>
+				<!-- <v-dialog v-model="errorDialog" width="350px">
 					<v-card class="text-center pa-4">
 						<v-icon size="100" color="red">mdi-alert-circle-outline</v-icon>
 						<v-card-text class="mt-3">All fields must be filled <br> before submitting</v-card-text>
@@ -27,7 +28,7 @@
 							<v-btn text block @click="errorDialog = false">close</v-btn>
 						</v-card-actions>
 					</v-card>
-				</v-dialog>
+				</v-dialog> -->
 			</form>
 		</div>
 		<v-progress-linear
@@ -75,9 +76,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import errorText from '@/components/error_component.vue'
+
 
 export default {
 	name: 'Farmers',
+
+	components: {
+		"error-dialog": errorText
+	},
 
 	data() {
 		return {

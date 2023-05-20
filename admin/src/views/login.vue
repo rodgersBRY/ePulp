@@ -1,47 +1,47 @@
 <template>
-    <div id="login-page">
-        <main>
-            <section class="form">
-                <form @submit.prevent="loginUser" method="post">
-                    <h2 class="text-center">LOGIN</h2>
-                    <br><br>
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" v-model="phone" placeholder="07XXXXXX98">
-                    <label for="password">Password</label>
-                    <input type="password" v-model="password">
-                    <v-btn depressed block color="brown" dark type="submit" value="Login" class="mt-10">Login</v-btn>
-                </form>
-            </section>
-        </main>
-    </div>
+	<div id="login-page">
+		<main>
+			<section class="form">
+				<form @submit.prevent="loginUser" method="post">
+					<h2 class="text-center">LOGIN</h2>
+					<br><br>
+					<label for="phone">Phone Number</label>
+					<input type="tel" v-model="phone" placeholder="07XXXXXX98">
+					<label for="password">Password</label>
+					<input type="password" v-model="password">
+					<v-btn depressed block color="brown" dark type="submit" value="Login" class="mt-10">Login</v-btn>
+				</form>
+			</section>
+		</main>
+	</div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex"
 
 export default {
-    data() {
-        return {
-            phone: '',
-            password: '',
-        }
-    },
+	data() {
+			return {
+					phone: '',
+					password: '',
+			}
+	},
 
-    computed: {
-        ...mapGetters(["user"])
-    },
+	computed: {
+			...mapGetters(["user","isLoading", "error"])
+	},
 
-    methods: {
+	methods: {
+		...mapActions(['login']),
+		loginUser() {
+				var userForm = new FormData()
 
-        loginUser() {
-            var userForm = new FormData()
+				userForm.append("phone", this.phone)
+				userForm.append("password", this.password)
 
-            userForm.append("phone", this.phone)
-            userForm.append("password", this.password)
-
-            this.$store.dispatch("login", userForm)
-        }
-    }
+				this.login(userForm)
+		}
+	}
 }
 </script>
 

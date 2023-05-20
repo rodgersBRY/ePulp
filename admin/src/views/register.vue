@@ -24,48 +24,49 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     data() {
-			return {
-				name: '',
-				phone: '',
-				password: '',
-				confirmPass: '',
-			}
+        return {
+            name: '',
+            phone: '',
+            password: '',
+            confirmPass: '',
+        }
     },
 
     computed: {
-			...mapGetters(['user']),
+        ...mapGetters(['user','isLoading', 'error']),
 
-			passMatch() {
-					return this.password === this.confirmPass
-			}
+        passMatch() {
+            return this.password === this.confirmPass
+        }
     },
 
     watch: {
-    user(val) {
-      if (val !== null && val !== undefined) {
-        this.$router.push("/");
-      }
+        user(val) {
+            if (val !== null && val !== undefined) {
+                this.$router.push("/");
+            }
+        },
     },
-  },
 
     methods: {
+        ...mapActions(['register']),
         registerUser() {
             if(this.password !== this.confirmPass) {
-							alert('Passwords do not match!')
-							return;
+                alert('Passwords do not match!')
+                return;
             }
 
             let userData = {
-							name: this.name,
-							phone: this.phone,
-							password: this.password
+                name: this.name,
+                phone: this.phone,
+                password: this.password
             }
 
-            this.$store.dispatch('register', userData)
+            this.register(userData)
         }
     }
 }

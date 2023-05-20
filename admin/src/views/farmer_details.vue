@@ -43,6 +43,8 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+
+          <error-dialog :display="errorDialog" error-text="Enter weight before submitting" @close-dialog="errorDialog = false"></error-dialog>
         </v-row>
 
         <div class="deliveries">
@@ -92,9 +94,14 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import errorDialog from '@/components/error_component.vue'
 
 export default({
   name: "farmer-details",
+
+  components: {
+    'error-dialog': errorDialog
+  },
 
   data() {
     return {
@@ -105,6 +112,7 @@ export default({
       weight: null,
       newBatchDialog: false,
       successDialog: false,
+      errorDialog: false,
     }
   },
 
@@ -149,7 +157,8 @@ export default({
 
     async addNewCoffeeDelivery() {
       if(this.weight === '') {
-        alert('Enter quantity to submit') 
+        this.newBatchDialog = false
+        this.errorDialog = true
       } else {
         await this.updateFarmersQuantity({id: this.farmerId, weight: this.weight})
         this.$store.dispatch('fetchFarmer', this.farmerId)
