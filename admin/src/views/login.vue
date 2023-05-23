@@ -9,8 +9,10 @@
 					<input type="tel" v-model="phone" placeholder="07XXXXXX98">
 					<label for="password">Password</label>
 					<input type="password" v-model="password">
-					<v-btn depressed block color="brown" dark type="submit" value="Login" class="mt-10">Login</v-btn>
+					<v-btn depressed block color="brown" dark type="submit" value="Login" class="mt-10" :loading="isLoading">Login</v-btn>
 				</form>
+
+				<error-dialog :display="error" @close-dialog="resetError" :error-text="error"></error-dialog>
 			</section>
 		</main>
 	</div>
@@ -24,22 +26,40 @@ export default {
 			return {
 					phone: '',
 					password: '',
+					errorDialog: false,
 			}
 	},
+
+	watch: {
+        user(val) {
+            if (val !== null && val !== undefined) {
+                this.$router.push("/");
+            }
+        },
+    },
 
 	computed: {
 			...mapGetters(["user","isLoading", "error"])
 	},
 
 	methods: {
-		...mapActions(['login']),
+		...mapActions(['login', 'clearError', 'setError']),
+
 		loginUser() {
+			if(this.phone == '' || this.password == '') {
+				this.setError('Phone number or password cannot be empty')
+			} else {
 				var userForm = new FormData()
 
 				userForm.append("phone", this.phone)
 				userForm.append("password", this.password)
+					
+				this.login(userForm)			
+			}				
+		},
 
-				this.login(userForm)
+		resetError() {
+			this.clearError()
 		}
 	}
 }

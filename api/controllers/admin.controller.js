@@ -1,20 +1,12 @@
 const bcrypt = require("bcrypt");
 
 const Farmer = require("../models/farmer.model");
-const { generateMembershipNumber } = require("../utlity_functions");
+const { generateRandomNumberWithPrefix } = require("../utlity_functions");
 
 function throwError(errorText, statusCode) {
   const error = new Error(errorText);
   error.statusCode = statusCode;
   throw error;
-}
-
-function generateRandomNumberWithPrefix() {
-  const prefix = "FM-";
-  const randomNumber = Math.floor(Math.random() * 10000); // Generate a random 6-digit number
-  const formattedNumber = randomNumber.toString().padStart(4, "0"); // Pad the number with leading zeros if necessary
-  const result = prefix + formattedNumber;
-  return result;
 }
 
 exports.allFarmers = async (req, res, next) => {
@@ -29,7 +21,7 @@ exports.allFarmers = async (req, res, next) => {
 
 exports.getFarmer = async (req, res, next) => {
   const farmerId = req.params.farmerId;
-  console.log(farmerId);
+  
   try {
     const farmer = await Farmer.findById(farmerId);
 
@@ -43,7 +35,7 @@ exports.getFarmer = async (req, res, next) => {
 
 
 exports.addFarmer = async (req, res, next) => {
-  const { fullName, phoneNumber, password } = req.body;
+  const { fullName, phoneNumber, password, accountNo } = req.body;
 
   try {
     const farmerExists = await Farmer.findOne({ phoneNumber: phoneNumber });
@@ -54,12 +46,11 @@ exports.addFarmer = async (req, res, next) => {
 
     var membershipNo = generateRandomNumberWithPrefix();
 
-    console.log(membershipNo);
-
     const farmer = new Farmer({
       fullName: fullName,
       phoneNumber: phoneNumber,
       membershipNo: membershipNo,
+      accountNo: accountNo,
       password: hashedPassword,
     });
 

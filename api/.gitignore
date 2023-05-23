@@ -3,3 +3,5 @@
 *.env
 
 apitests.http
+
+farmers.json

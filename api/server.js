@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log("Connected to mongo DB!");
 });
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -7,7 +7,7 @@
         <v-card-subtitle> Number of farmers </v-card-subtitle>
       </v-card>
 
-      <v-card width="300px" height="200px" outlined class="card pa-2" @click="$router.push('/')">
+      <v-card width="300px" height="200px" outlined class="card pa-2" @click="$router.push('#')">
         <v-icon size="100">mdi-scale-balance</v-icon>
         <v-card-title>{{ totalWeight }} Kgs</v-card-title>
         <v-card-subtitle>Coffee brought by farmers</v-card-subtitle>

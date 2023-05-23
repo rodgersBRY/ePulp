@@ -24,6 +24,10 @@ const farmerSchema = new Schema({
     type: Number,
     default: 0,
   },
+  accountNo: {
+    type: Number,
+    required: true
+  },
   coffeeBatches: [
     {
       coffeeWeight: Number,
