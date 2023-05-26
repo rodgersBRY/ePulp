@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  return res.status(200).send("Server is running correctly");
+  return res.status(200).send("Server is up and running!");
 });
 
 app.use("/api/auth", authRoutes);
@@ -43,5 +43,3 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
-
-module.exports = app;
