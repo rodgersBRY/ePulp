@@ -63,8 +63,6 @@ export default {
           password: payload.get('password'),
         });
 
-        console.log(res);
-
         if (res.status === 200) {
           let user = res.data.loadedUser;
           let token = res.data.token;
