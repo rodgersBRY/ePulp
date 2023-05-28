@@ -4,8 +4,8 @@
       <img :src="require('./assets/logo.png')" alt="alt logo">
 
       <div class="nav-links">
-        <button class="nav-btn" @click="$router.push('/')">Home</button>
-        <button class="nav-btn" @click="$router.push('/farmers')">Farmers</button>
+        <button class="nav-btn" :class="{ active: activeLink === '/'}" @click="navigateUser('/')">Home</button>
+        <button class="nav-btn" :class="{ active: activeLink === '/farmers'}" @click="navigateUser('/farmers')">Farmers</button>
       </div>
 
       <div class="other-links">
@@ -21,8 +21,8 @@
 
       <img :src="require('./assets/logo.png')" alt="alt logo">
 
-      <button class="nav-btn" @click="navigateUser('/')">Home</button>
-      <button class="nav-btn" @click="navigateUser('/farmers')">Farmers</button>
+      <button class="nav-btn" :class="{ active: activeLink === '/'}" @click="navigateUser('/')">Home</button>
+      <button class="nav-btn"  :class="{ active: activeLink === '/farmers'}" @click="navigateUser('/farmers')">Farmers</button>
       <button v-if="!user" @click="navigateUser('/login')"><v-icon color="var(--accent-color)">mdi-login</v-icon> Login</button>
       <button v-else @click="logoutUser"><v-icon color="var(--accent-color)">mdi-logout</v-icon> Logout</button>
     </div>
@@ -41,7 +41,8 @@ export default {
 
   data() {
     return {
-      drawer: false
+      drawer: false,
+      activeLink: '',
     }
   },
 
@@ -75,6 +76,7 @@ export default {
     navigateUser(route) {
       this.closeNavMenu()
       this.$router.push(route);
+      this.activeLink = route
     },
 
     logoutUser() {
@@ -111,9 +113,7 @@ input:focus {
     .nav-links, .other-links {
       display: none;
     }
-  }
-
-  
+  }  
 }
 
 @media screen and (min-width: 700px) {
@@ -142,7 +142,7 @@ input:focus {
         color: white;
         transition: background-color .3s ease-in-out, color .3s ease-in-out, border-top .3s ease-in-out;
         
-        &:hover,.active {
+        &:hover,&.active {
           border-top: 3px solid var(--accent-color);
           background-color: var(--active-color);
           color: var(--accent-color);
@@ -202,23 +202,6 @@ input:focus {
 .nav-bar {
   background-color: var(--primary-color);
   padding: 0;
-
-  
-  li {
-    list-style: none;
-    margin: 0 2rem;
-    padding: 0 16px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    
-    &:hover,&.active {
-      color: var(--accent-color);
-      background-color: var(--active-color);
-      cursor: pointer;
-      border-top: 3px solid var(--accent-color);
-    }
-  }
 
   .logoutBtn, .authBtn {
     color: var(--accent-color);

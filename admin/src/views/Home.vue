@@ -42,22 +42,23 @@ export default ({
     flex-direction: column;
     padding-top: 2rem;
     .card {
-      width: 300px;
+      width: 95%;
       display: block;
-      margin: 10px 0;
+      margin: 10px auto;
     }
   }
 }
 
 @media screen and (min-width: 700px) {
   .main {
-    width: 60%;
+    width: 80%;
     padding: 3rem;
     margin: auto;
     display: flex;
-    justify-content: space-around;
 
     .card {
+      width: 400px;
+      margin: 0 10px;
       cursor: pointer;
     }
   }
