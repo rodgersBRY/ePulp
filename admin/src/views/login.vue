@@ -66,15 +66,32 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#login-page {
+@media screen and (max-width: 700px) {
+	#login-page {
+		height: 100vh;
+		main {
+			height: 100%;
+			padding: 10px;
+		}
+	}
+}
+
+@media screen and (min-width: 700px) {
+	#login-page {
     height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		main {
+			width: 40%;
+			padding: 4rem 7rem;
+		}
+	}
+}
+
+#login-page {
     main {
         background-color: var(--accent-color);
-        width: 40%;
-        padding: 4rem 7rem;
         input {
             display: block;
             background-color: white;
