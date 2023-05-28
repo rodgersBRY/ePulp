@@ -202,10 +202,6 @@ input:focus {
 .nav-bar {
   background-color: var(--primary-color);
   padding: 0;
-
-  .logoutBtn, .authBtn {
-    color: var(--accent-color);
-  }
 }
 
 
